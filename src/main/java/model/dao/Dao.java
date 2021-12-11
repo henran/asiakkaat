@@ -67,23 +67,24 @@ public class Dao {
 			con = yhdista();
 			if(con!=null) {
 				stmtPrep = con.prepareStatement(sql);
-				stmtPrep.setString(0,  "%" + hakusana + "%");
 				stmtPrep.setString(1,  "%" + hakusana + "%");
+				stmtPrep.setString(2,  "%" + hakusana + "%");
 				stmtPrep.setString(3,  "%" + hakusana + "%");
 				rs = stmtPrep.executeQuery(); 
 				if(rs!=null) {
 					while(rs.next()) {
 						Asiakas asiakas = new Asiakas();
-						
-						asiakas.setEtunimi(rs.getString(0));
-						asiakas.setSukunimi(rs.getString(1));
-						asiakas.setPuhelin(rs.getString(2));
-						asiakas.setSposti(rs.getString(3));
+						asiakas.setAsiakas_id(rs.getInt(1));
+						asiakas.setEtunimi(rs.getString(2));
+						asiakas.setSukunimi(rs.getString(3));
+						asiakas.setPuhelin(rs.getString(4));
+						asiakas.setSposti(rs.getString(5));
 						asiakkaat.add(asiakas);
 					}
 				}
-			}
+			
 			con.close();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
