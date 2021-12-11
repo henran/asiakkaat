@@ -44,11 +44,11 @@ public class Dao {
 				if(rs!=null) {
 					while(rs.next()) {
 						Asiakas asiakas = new Asiakas();
-						
-						asiakas.setEtunimi(rs.getString(0));
-						asiakas.setSukunimi(rs.getString(1));
-						asiakas.setPuhelin(rs.getString(2));
-						asiakas.setSposti(rs.getString(3));
+						asiakas.setAsiakas_id(rs.getInt(1));
+						asiakas.setEtunimi(rs.getString(2));
+						asiakas.setSukunimi(rs.getString(3));
+						asiakas.setPuhelin(rs.getString(4));
+						asiakas.setSposti(rs.getString(5));
 						asiakkaat.add(asiakas);
 						
 					}

@@ -14,7 +14,7 @@ import model.Asiakas;
 import model.dao.Dao;
 
 
-@WebServlet("/asiakkaat/*")
+@WebServlet("/asiakkaat")
 public class Asiakkaat extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
