@@ -12,8 +12,11 @@
 <table id="lista">
 <thead>
 <tr>
+<th colspan="5"><span id="uusiAsiakas">Lis‰‰ uusi asiakas</span></th>
+</tr>
+<tr>
 <th id="haku">Hakusana:</th>
-<th><input type="text" id="hakusana"></th>
+<th colspan="3"><input type="text" id="hakusana"></th>
 <th><input type="button" value="Hae" id="hae"></th>
 </tr>
 <tr>
@@ -22,25 +25,21 @@
 <th id="ot">Sukunimi</th>
 <th id="ot">Puhelin</th>
 <th id="ot">Sposti</th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 </tbody>
 </table>
 <script>
-/*$(document).ready(function(){
-	$.ajax({url:"asiakkaat", type:"GET", dataType"json", success:function(result){
-		console.log(result);
-	}});
-	});*/
-
-
 
 $(document).ready(function(){
-	//haeAsiakkaat();
-//	$("#hakunappi").click(function(){
-		//haeAsiakkaat();
-	//});
+
+$("#uusiAsiakas").click(function(){
+	document.location="lisaaasiakas.jsp";
+});
+
+
 	$(document.body).on("keydown", function(event){
 		if(event.which==13){
 			haeAsiakkaat();
@@ -57,7 +56,7 @@ function haeAsiakkaat(){
 	$("#lista tbody").empty();
 	
 
-	$.ajax({url:"asiakkaat/"+$("#hakusana").val(), type="GET", dataType:"json", success:function(result){
+	$.ajax({url:"asiakkaat/"+$("#hakusana").val(), type:"GET", dataType:"json", success:function(result){
 		//console.log(result);
 		$.each(result.asiakkaat, function(i, field){
 		var htmlStr;	
@@ -67,11 +66,25 @@ function haeAsiakkaat(){
 		 htmlStr +="<td>"+field.sukunimi+"</td>";
 		 htmlStr +="<td>"+field.puhelin+"</td>";
 		 htmlStr +="<td>"+field.sposti+"</td>";
+		 htmlStr +="<td><span class='poista' onclick=poista("+field.asiakas_id+")>Poista</span></td>";
 		 htmlStr +="</tr>";
 		 $("#lista tbody").append(htmlStr);
 		});
 	}});
 
+	}
+	function poista(asiakas_id) {
+		if(confirm("Poista asiakas " + asiakas_id + "?")) {
+			$.ajax({url:"asiakkaat/" +asiakas_id, type:"DELETE", dataType:"json", success:function(result){
+				if(result.response==0){
+					$("#ilmo").html("Asiakkaan poisto ep‰onnistui.");
+				} else if (result.response==1) {
+					$("#rivi_"+asiakas_id).css("background-color", "red");
+				 alert("Asiakkaan " + asiakas_id + " poisto onnistui.");
+				 haeAsiakkaat();
+				}
+			}});
+		}
 	}
 	
 </script>
