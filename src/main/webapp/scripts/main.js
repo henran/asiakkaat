@@ -15,18 +15,15 @@ function requestURLParam(sParam){
 
 } 
 
-function formDataJsonStr(formArray) { 
+function formDataToJSON(data) { 
 
-var returnArray = {}; 
-
-for (var i = 0; i < formArray.length; i++){ 
-
-returnArray[formArray[i]['name']] = formArray[i]['value']; 
-
+var returnStr = "{"; 
+for (var i = 0; i < data.length; i++){ 
+returnStr+="\""+data[i].name + "\":\"" + data[i].value + "\", "; 
 } 
 
-return JSON.stringify(returnArray); 
+returnStr = returnStr.substring(0, returnStr.length-1);
+returnStr+="}";
+return returnStr; 
 
-} /**
- * 
- */
+} 

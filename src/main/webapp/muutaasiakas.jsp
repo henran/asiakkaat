@@ -6,8 +6,7 @@
 <meta charset="ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/main.css">
 <script src="scripts/main.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+
 <title>Insert title here</title>
 </head>
 <body>
@@ -15,7 +14,8 @@
 <table>
 <thead>
 <tr>
-<th colspan="5"><span id="lista">Takaisin asiakaslistaukseen</span></th>
+<th colspan="3" id="ilmo"></th>
+<th colspan="5" id="lista"><a href="listaaasiakkaat.jsp">Takaisin asiakaslistaukseen</a></th>
 </tr>
 <tr>
 <th>Asiakas_id</th>
@@ -33,15 +33,97 @@
 <td><input type="text" name="sukunimi" id="sukunimi"></td>
 <td><input type="text" name="puhelin" id="puhelin"></td>
 <td><input type="text" name="sposti" id="sposti"></td>
-<td><input type="submit" id="tallenna" value="Päivitä"></td>
+<td><input type="submit" id="tallenna" value="Hyväksy" onclick="tarkasta()"></td>
 </tr>
 </tbody> 
 </table>
 <input type="hidden" name="vanhaAsId" id="vanhaAsId"> 
 </form>
-<span id="ilmo"></span>
+
 </body>
 <script>
+
+
+var asiakas_id = requestURLParam("asiakas_id");
+fetch("asiakkaat/haeyksi/" + asiakas_id, {
+	method: 'GET'
+})
+.then(function (response) {
+	return response.json()
+})
+
+.then(function (responseJson) {
+
+	console.log(responseJson);
+	document.getElementById("asiakas_id").value = responseJson.asiakas_id;
+	document.getElementById("etunimi").value = responseJson.etunimi;
+	document.getElementById("sukunimi").value = responseJson.sukunimi;
+	document.getElementById("puhelin").value = responseJson.puhelin;
+	document.getElementById("sposti").value = responseJson.sposti;
+	document.getElementById("vanhaAsId").value = responseJson.asiakas_id;
+
+});
+	
+
+
+function tarkasta(){
+	var ilmo = "";
+		
+		if(document.getElementById("asiakas_id").value*1!=document.getElementById("asiakas_id").value){
+			ilmo = "Asiakasnumero ei ole kelvollinen!";
+			
+		} else if (document.getElementById("etunimi").value.length<2){
+			ilmo = "Etunimi ei ole kelvollinen!";
+			
+		}  else if (document.getElementById("sukunimi").value.length<2){
+			ilmo="Sukunimi ei ole kelvollinen";
+			
+			
+		}  else if (document.getElementById("puhelin").value.length<3){
+			ilmo="Puhelin ei ole kelvollinen";
+			
+			
+		}
+		 else if (document.getElementById("sposti").value.length<5){
+				ilmo="Sposti ei ole kelvollinen";
+			
+				
+		}
+		if(ilmo!=""){
+			document.getElementById("ilmo").innerHTML=ilmo;
+			setTimeout(function(){document.getElementById("ilmo").innerHTML=""; }, 3000);
+			return;
+		}
+		var formJsonStr=formDataToJSON(document.getElementById("tiedot"));
+		console.log(formJsonStr);
+		
+		fetch("asiakkaat", {
+			method: 'PUT',
+			body:formJsonStr
+		})
+		.then (function (response) {
+			return response.json()
+		})
+		.then (function (responseJson) {
+			var vastaus = responseJson.response;
+			if(vastaus==0){
+				document.getElementById("ilmo").innerHTML = "Asiakkaan tietojen päivitys epäonnistui";
+			} else if (vastaus==1) {
+				document.getElementById("ilmo").innerHTML = "Asiakkaan tietojen päivitys onnistui";
+			}
+			setTimeout(function(){ document.getElementById("ilmo").innerHTML=""; }, 5000);
+		});
+		document.getElementById("tiedot").reset();
+		}
+		
+
+
+
+
+
+
+/*
+
 $(document).ready(function() {
 	$("#lista").click(function(){
 		document.location="listaaasiakkaat.jsp";
@@ -122,5 +204,8 @@ $("#tiedot").validate({
 		}
 		}});
 	}
+	
+	
+	*/
 </script>
 </html>
